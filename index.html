@@ -1,61 +1,670 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DesignGeko</title>
-    
-    <script src="https://www.paypal.com/sdk/js?client-id=BAAV8TqAAeBnaHJyooIa5dt49BeEt7usmp5s12URKnWxUivlMDKvT1QUTYZzt5ekzYW3LnzF322UHKnVog&components=hosted-buttons&disable-funding=venmo&currency=USD"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>DesignGeko</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+          },
+          colors: {
+            geko: {
+              50: '#f4fce3',
+              100: '#e2f9be',
+              200: '#c5f38c',
+              300: '#a3e635',
+              400: '#84cc16',
+              500: '#65a30d',
+              600: '#4d7c0f',
+            }
+          }
         }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f6f8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .checkout-card {
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-        .checkout-card h2 {
-            font-size: 20px;
-            color: #333;
-            margin-bottom: 8px;
-        }
-        .checkout-card p {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 24px;
-        }
-    </style>
+      }
+    }
+  </script>
+
+  <style>
+    .glass-panel {
+      background: rgba(18, 20, 26, 0.65);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .glass-panel:hover {
+      border-color: rgba(163, 230, 53, 0.3);
+      box-shadow: 0 12px 40px 0 rgba(163, 230, 53, 0.05);
+      transform: translateY(-2px);
+    }
+
+    .shader-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+      border-radius: 1.5rem;
+      pointer-events: auto;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 17, 23, 0.9);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(163, 230, 53, 0.3);
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(163, 230, 53, 0.6);
+    }
+
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 0.2; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.05); }
+    }
+    .animate-pulse-slow {
+      animation: pulse-slow 8s infinite ease-in-out;
+    }
+  </style>
 </head>
-<body>
+<body class="bg-[#0b0c10] text-slate-100 font-sans min-h-screen relative overflow-x-hidden selection:bg-geko-300 selection:text-black">
 
-    <div class="checkout-card">
-        <h2>DesignGeko</h2>
-       
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-30">
+    <div class="absolute w-[300px] md:w-[500px] h-[300px] md:h-[500px] rounded-full bg-geko-500/10 blur-[80px] md:blur-[120px] top-10 left-10 animate-pulse-slow"></div>
+    <div class="absolute w-[350px] md:w-[600px] h-[350px] md:h-[600px] rounded-full bg-cyan-500/10 blur-[100px] md:blur-[150px] bottom-10 right-10 animate-pulse-slow" style="animation-delay: 2s;"></div>
+  </div>
 
-        <div id="paypal-container-VWAGQNHV9KYQE"></div>
+  <header class="w-full max-w-7xl mx-auto px-4 pt-6 pb-2 relative z-10 flex flex-wrap justify-between items-center gap-4">
+    <div class="flex items-center space-x-3 bg-white/5 backdrop-blur-md px-5 py-2.5 sm:px-6 sm:py-3 rounded-full border border-white/10 hover:border-geko-300/40 transition duration-300">
+      <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-geko-400 to-emerald-500 flex items-center justify-center shadow-lg shadow-geko-500/20">
+        <i class="fa-solid fa-dragon text-slate-900 text-xs sm:text-sm"></i>
+      </div>
+      <div>
+        <span class="font-display font-bold text-base sm:text-lg tracking-wide bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">DesignGeko</span>
+      </div>
     </div>
-    
-    <script>
-      paypal.HostedButtons({
-        hostedButtonId: "VWAGQNHV9KYQE",
-      }).render("#paypal-container-VWAGQNHV9KYQE");
-    </script>
 
+    <div class="flex items-center space-x-3 sm:space-x-4 ml-auto sm:ml-0">
+      <div class="flex items-center space-x-1 sm:space-x-1.5 bg-white/5 backdrop-blur-md p-1 sm:p-1.5 rounded-full border border-white/10">
+        <a href="https://facebook.com" target="_blank" aria-label="Facebook" class="w-8 h-8 rounded-full hover:bg-indigo-600/20 text-slate-300 hover:text-indigo-400 flex items-center justify-center text-xs sm:text-sm transition duration-300">
+          <i class="fa-brands fa-facebook-f"></i>
+        </a>
+        <a href="https://wa.me/yournumber" target="_blank" aria-label="WhatsApp" class="w-8 h-8 rounded-full hover:bg-emerald-600/20 text-slate-300 hover:text-emerald-400 flex items-center justify-center text-xs sm:text-sm transition duration-300">
+          <i class="fa-brands fa-whatsapp"></i>
+        </a>
+        <a href="mailto:contact@designgeko.com" aria-label="Email Address" class="w-8 h-8 rounded-full hover:bg-rose-600/20 text-slate-300 hover:text-rose-400 flex items-center justify-center text-xs sm:text-sm transition duration-300">
+          <i class="fa-regular fa-envelope"></i>
+        </a>
+      </div>
+
+      <div class="relative group/pay">
+        <a href="#pay-portal-path" class="bg-gradient-to-r from-geko-400 to-emerald-500 hover:from-geko-300 hover:to-emerald-400 text-slate-900 font-bold px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-xs transition-all duration-300 shadow-lg shadow-geko-500/20 flex items-center space-x-1.5 sm:space-x-2">
+          <i class="fa-solid fa-receipt text-xs"></i>
+          <span>Pay Now</span>
+        </a>
+        
+        <div class="absolute right-0 top-full mt-2 hidden sm:group-hover/pay:flex items-center space-x-1 bg-slate-950/95 border border-white/10 text-[10px] text-slate-200 py-1.5 px-3 rounded-xl whitespace-nowrap shadow-2xl z-20 pointer-events-none transform translate-y-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+          <span>This is for customers only.</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="w-full max-w-7xl mx-auto px-4 py-4 relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- HERO CARD -->
+    <section class="lg:col-span-2 glass-panel rounded-3xl p-5 sm:p-6 md:p-8 relative overflow-hidden flex flex-col justify-between min-h-[460px] group">
+      
+      <div class="shader-container" id="shader-parent">
+        <canvas id="hero-gl-shader" class="w-full h-full block absolute inset-0 opacity-85 transition-opacity duration-700"></canvas>
+        <div class="absolute inset-0 bg-gradient-to-t from-[#0e0f14]/90 via-[#0e0f14]/55 to-[#0e0f14]/25 mix-blend-multiply pointer-events-none"></div>
+      </div>
+
+      <div class="relative z-10 w-full flex flex-col h-full justify-between pointer-events-none">
+        
+        <div class="my-auto py-6">
+          <h1 class="text-3xl sm:text-4xl md:text-5xl font-display font-extrabold tracking-tight text-white mb-4 pointer-events-auto min-h-[4.5rem] md:min-h-[6.5rem]">
+            <span class="block bg-gradient-to-r from-white via-slate-100 to-slate-300 bg-clip-text text-transparent" id="typing-heading"></span>
+            <span class="inline-block w-1.5 h-7 md:h-8 bg-geko-300 ml-1 animate-ping" id="typing-cursor"></span>
+          </h1>
+
+          <p class="text-xs sm:text-sm md:text-base text-slate-300 max-w-xl leading-relaxed font-light mb-4 backdrop-blur-sm bg-black/20 p-4 rounded-2xl border border-white/5 inline-block pointer-events-auto">
+            Hi, my name is <span class="text-geko-300 font-semibold font-display">designgeko</span>. 
+            I construct rapid, high-conversion templates and complete clean content platform transformations. Pick a service to upgrade your modern digital footprint today.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full pointer-events-auto">
+          <div class="bg-black/30 backdrop-blur-md border border-white/5 rounded-2xl p-4 flex items-start space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-geko-400/10 flex items-center justify-center text-geko-300 shrink-0">
+              <i class="fa-solid fa-gift text-sm"></i>
+            </div>
+            <div>
+              <p class="text-[10px] sm:text-[11px] text-geko-300 uppercase tracking-widest font-bold">Complimentary</p>
+              <p class="text-xs font-semibold text-white mt-0.5">Free Templates</p>
+              <p class="text-[10px] text-slate-400 mt-1 leading-normal">Premium production-ready layouts with zero licensing fees.</p>
+            </div>
+          </div>
+
+          <div class="bg-black/30 backdrop-blur-md border border-white/5 rounded-2xl p-4 flex items-start space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-indigo-400/10 flex items-center justify-center text-indigo-300 shrink-0">
+              <i class="fa-brands fa-wordpress text-sm"></i>
+            </div>
+            <div>
+              <p class="text-[10px] sm:text-[11px] text-indigo-300 uppercase tracking-widest font-bold">Evolution</p>
+              <p class="text-xs font-semibold text-white mt-0.5">WordPress Redesign</p>
+              <p class="text-[10px] text-slate-400 mt-1 leading-normal">Modernize existing portals for premium viewport speed & style.</p>
+            </div>
+          </div>
+
+          <div class="bg-black/30 backdrop-blur-md border border-white/5 rounded-2xl p-4 flex items-start space-x-3">
+            <div class="w-9 h-9 rounded-xl bg-emerald-400/10 flex items-center justify-center text-emerald-300 shrink-0">
+              <i class="fa-solid fa-hand-holding-dollar text-sm"></i>
+            </div>
+            <div>
+              <p class="text-[10px] sm:text-[11px] text-emerald-300 uppercase tracking-widest font-bold">Fair Assurance</p>
+              <p class="text-xs font-semibold text-white mt-0.5">Value-First Pricing</p>
+              <p class="text-[10px] text-slate-400 mt-1 leading-normal">Align final client rates directly with actual delivered value.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SIDEBAR COLUMNS -->
+    <div class="lg:col-span-1 flex flex-col gap-6">
+      <!-- BROWSE SERVICES CARD -->
+      <section class="glass-panel rounded-3xl p-5 sm:p-6 flex flex-col justify-between relative overflow-hidden group">
+        <div class="absolute -right-12 -top-12 w-32 h-32 bg-geko-500/10 rounded-full blur-2xl group-hover:bg-geko-500/20 transition-all duration-500"></div>
+
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg sm:text-xl font-display font-bold text-white">Browse Services</h3>
+            <i class="fa-solid fa-layer-group text-geko-300 text-sm"></i>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed mb-6">
+            Examine specialized solutions tailored to upgrade conversion rates, viewport styles, and framework speeds.
+          </p>
+
+          <div class="space-y-3">
+            <a href="#wordpress-design-anchor" class="flex items-center justify-between bg-white/5 hover:bg-white/10 border border-white/10 hover:border-geko-300/30 p-3.5 sm:p-4 rounded-2xl transition duration-300 group/btn">
+              <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center group-hover/btn:scale-110 transition duration-300">
+                  <i class="fa-brands fa-wordpress text-base sm:text-lg"></i>
+                </div>
+                <span class="text-xs sm:text-sm font-semibold text-slate-200 group-hover/btn:text-white transition">WordPress Design</span>
+              </div>
+              <i class="fa-solid fa-chevron-right text-xs text-slate-500 group-hover/btn:translate-x-1 transition"></i>
+            </a>
+
+            <a href="#landing-design-anchor" class="flex items-center justify-between bg-white/5 hover:bg-white/10 border border-white/10 hover:border-geko-300/30 p-3.5 sm:p-4 rounded-2xl transition duration-300 group/btn">
+              <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center group-hover/btn:scale-110 transition duration-300">
+                  <i class="fa-solid fa-cubes text-base sm:text-lg"></i>
+                </div>
+                <span class="text-xs sm:text-sm font-semibold text-slate-200 group-hover/btn:text-white transition">Landing Page Design</span>
+              </div>
+              <i class="fa-solid fa-chevron-right text-xs text-slate-500 group-hover/btn:translate-x-1 transition"></i>
+            </a>
+
+            <a href="#free-templates-anchor" class="flex items-center justify-between bg-white/5 hover:bg-white/10 border border-white/10 hover:border-geko-300/30 p-3.5 sm:p-4 rounded-2xl transition duration-300 group/btn">
+              <div class="flex items-center space-x-3">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center group-hover/btn:scale-110 transition duration-300">
+                  <i class="fa-solid fa-circle-down text-base sm:text-lg"></i>
+                </div>
+                <span class="text-xs sm:text-sm font-semibold text-slate-200 group-hover/btn:text-white transition">Free Templates</span>
+              </div>
+              <i class="fa-solid fa-chevron-right text-xs text-slate-500 group-hover/btn:translate-x-1 transition"></i>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="glass-panel rounded-3xl p-5 sm:p-6 flex flex-col justify-center min-h-[160px] relative overflow-hidden group bg-gradient-to-tr from-geko-950/40 via-[#12141a] to-emerald-950/35 border-geko-300/20">
+        <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-gradient-to-tr from-geko-500/20 to-emerald-500/20 rounded-full blur-2xl group-hover:scale-125 transition-all duration-500"></div>
+        <div class="absolute -left-10 -top-10 w-24 h-24 bg-cyan-500/10 rounded-full blur-xl"></div>
+        
+        <div class="relative z-10 space-y-2">
+          <p class="font-display font-bold text-xl sm:text-2xl md:text-3xl tracking-tight leading-none bg-gradient-to-r from-geko-300 to-emerald-400 bg-clip-text text-transparent">
+            Simplicity matters.
+          </p>
+          <p class="font-sans font-light text-[11px] sm:text-xs text-slate-400 tracking-wide uppercase">
+            Attention to detail is key.
+          </p>
+          <div class="h-[1px] w-12 bg-geko-300/30 my-1"></div>
+          <p class="font-display font-medium text-[9px] sm:text-[10px] text-slate-500 tracking-wider">
+            DESIGNGEKO
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <section class="lg:col-span-2 glass-panel rounded-3xl p-5 sm:p-6 flex flex-col justify-between group min-h-[350px]">
+      
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg sm:text-xl font-display font-bold text-white">Latest Projects</h3>
+          <div class="flex space-x-1.5">
+            <button onclick="prevProject()" aria-label="Previous Project" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs flex items-center justify-center text-slate-300 focus:outline-none transition">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button onclick="nextProject()" aria-label="Next Project" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs flex items-center justify-center text-slate-300 focus:outline-none transition">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <p class="text-xs text-slate-400 leading-relaxed mb-4">
+          Review premium live systems deployed for high-growth client pipelines. <span class="hidden sm:inline">Swipe or use arrows to navigate.</span>
+        </p>
+
+        <div class="relative rounded-2xl overflow-hidden border border-white/10 min-h-[11rem] bg-slate-900 flex items-end p-4 sm:p-5 transition-all duration-300 cursor-grab active:cursor-grabbing" id="project-card">
+          <div class="absolute inset-0 bg-gradient-to-tr from-indigo-950 via-[#12141a] to-slate-950 z-0" id="project-bg"></div>
+          
+          <div class="absolute inset-0 z-0 opacity-10 flex flex-wrap gap-2 p-2 pointer-events-none overflow-hidden">
+            <div class="w-full h-px bg-white"></div>
+            <div class="w-px h-full bg-white"></div>
+          </div>
+
+          <div class="relative z-10 w-full flex flex-col sm:flex-row justify-between sm:items-end gap-4">
+            <div>
+              <span class="text-[9px] bg-geko-400/20 text-geko-300 font-bold uppercase tracking-widest px-2.5 py-1 rounded-full" id="project-tag">Web Development</span>
+              <h4 class="text-lg sm:text-xl font-display font-extrabold text-white mt-2" id="project-title">Primos LLC Website</h4>
+              <p class="text-xs text-slate-400 mt-1 max-w-xl" id="project-summary">Modernized corporate ecosystem showcasing premier service logistics and content.</p>
+            </div>
+            
+            <button onclick="openProjectModal()" class="bg-[#3d4047] hover:bg-geko-300 hover:text-black font-bold text-[10px] text-white py-2.5 px-3.5 sm:py-2 sm:px-3 rounded-xl flex items-center justify-center space-x-1.5 transition duration-300 shadow-md shrink-0 w-full sm:w-auto">
+              <span>Explore</span>
+              <i class="fa-solid fa-chevron-up-right-from-square text-[8px]"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="glass-panel rounded-3xl p-5 sm:p-6 flex flex-col justify-between group min-h-[350px]">
+      
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg sm:text-xl font-display font-bold text-white">Connect Directly</h3>
+          <i class="fa-regular fa-comment-dots text-geko-300 text-sm"></i>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed mb-6">
+          Reach out across secured communication channels. Get rapid answers or begin project designs directly.
+        </p>
+
+        <div class="grid grid-cols-1 gap-3">
+          <a href="https://wa.me/yournumber" target="_blank" class="flex items-center space-x-3.5 sm:space-x-4 p-3 sm:p-4 rounded-2xl bg-[#25d366]/5 hover:bg-[#25d366]/15 border border-[#25d366]/20 hover:border-[#25d366]/50 transition-all duration-300 group/soc font-display">
+            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-[#25d366]/10 text-[#25d366] flex items-center justify-center text-xl sm:text-2xl group-hover/soc:scale-110 transition duration-300">
+              <i class="fa-brands fa-whatsapp"></i>
+            </div>
+            <div>
+              <p class="text-[10px] sm:text-[11px] text-[#25d366] font-bold uppercase tracking-wider">Fast Chat</p>
+              <p class="text-xs sm:text-sm font-bold text-white">WhatsApp Messenger</p>
+            </div>
+          </a>
+
+          <a href="mailto:contact@designgeko.com" class="flex items-center space-x-3.5 sm:space-x-4 p-3 sm:p-4 rounded-2xl bg-rose-500/5 hover:bg-rose-500/15 border border-rose-500/20 hover:border-rose-500/50 transition-all duration-300 group/soc font-display">
+            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-rose-500/10 text-rose-300 flex items-center justify-center text-xl sm:text-2xl group-hover/soc:scale-110 transition duration-300">
+              <i class="fa-regular fa-envelope"></i>
+            </div>
+            <div>
+              <p class="text-[10px] sm:text-[11px] text-rose-300 font-bold uppercase tracking-wider">Direct Inbox</p>
+              <p class="text-xs sm:text-sm font-bold text-white">contact@designgeko.com</p>
+            </div>
+          </a>
+
+          <a href="https://facebook.com" target="_blank" class="flex items-center space-x-3.5 sm:space-x-4 p-3 sm:p-4 rounded-2xl bg-blue-500/5 hover:bg-blue-500/15 border border-blue-500/20 hover:border-blue-500/50 transition-all duration-300 group/soc font-display">
+            <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-blue-500/10 text-blue-300 flex items-center justify-center text-xl sm:text-2xl group-hover/soc:scale-110 transition duration-300">
+              <i class="fa-brands fa-facebook-f"></i>
+            </div>
+            <div>
+              <p class="text-[10px] sm:text-[11px] text-blue-300 font-bold uppercase tracking-wider">Social Feed</p>
+              <p class="text-xs sm:text-sm font-bold text-white">DesignGeko Page</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <div id="project-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+    <div class="bg-[#12141c] border border-white/10 rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl relative">
+      <div class="h-1.5 w-full bg-gradient-to-r from-geko-300 to-emerald-400"></div>
+      
+      <div class="p-5 sm:p-6">
+        <div class="flex justify-between items-start gap-4 mb-4">
+          <div>
+            <span class="text-[10px] bg-geko-400/20 text-geko-300 font-bold px-2.5 py-1 rounded-full uppercase tracking-wider" id="modal-project-tag">Web Development</span>
+            <h3 class="text-xl sm:text-2xl font-display font-extrabold text-white mt-1.5" id="modal-project-title">Primos LLC Website</h3>
+          </div>
+          <button onclick="closeProjectModal()" aria-label="Close details" class="text-slate-400 hover:text-white transition bg-white/5 hover:bg-white/10 rounded-full p-2 w-8 h-8 flex items-center justify-center focus:outline-none shrink-0">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div class="space-y-4 text-xs text-slate-300 leading-relaxed">
+          <p id="modal-project-desc">
+            Primos LLC was completely redesigned to improve local logistics conversions and mobile compatibility.
+          </p>
+          <div class="bg-black/50 p-3 rounded-xl border border-white/5 space-y-1.5 font-mono text-[10px] sm:text-[11px]">
+            <p><span class="text-geko-300">Strategy:</span> Speeds, Visual Hierarchy, CTA optimization</p>
+            <p><span class="text-geko-300">Targeting:</span> Corporate and Local Logistics</p>
+            <p><span class="text-geko-300">Status:</span> Live Production</p>
+          </div>
+        </div>
+
+        <div class="mt-6 flex gap-3">
+          <button onclick="closeProjectModal()" class="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold py-2.5 rounded-xl text-xs transition min-h-[44px]">
+            Close
+          </button>
+          <a href="#" class="flex-1 bg-geko-300 hover:bg-geko-400 text-black text-center font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center space-x-1.5 min-h-[44px]">
+            <span>View Project</span>
+            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('hero-gl-shader');
+    const gl = canvas.getContext('webgl');
+
+    if (!gl) {
+      canvas.style.display = 'none';
+    }
+
+    const vsSource = `
+      attribute vec2 position;
+      void main() {
+        gl_Position = vec4(position, 0.0, 1.0);
+      }
+    `;
+
+    const fsSource = `
+      precision highp float;
+      uniform vec2 u_resolution;
+      uniform float u_time;
+      uniform vec2 u_mouse;
+      uniform float u_noise_scale;
+
+      float hash(vec2 p) {
+        return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+      }
+
+      float noise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        vec2 u = f * f * (3.0 - 2.0 * f);
+        return mix(mix(hash(i + vec2(0.0,0.0)), hash(i + vec2(1.0,0.0)), u.x),
+                   mix(hash(i + vec2(0.0,1.0)), hash(i + vec2(1.0,1.0)), u.x), u.y);
+      }
+
+      float fbm(vec2 p) {
+        float v = 0.0;
+        float a = 0.5;
+        vec2 shift = vec2(100.0);
+        mat2 rot = mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.5));
+        for (int i = 0; i < 4; ++i) {
+          v += a * noise(p);
+          p = rot * p * 2.0 + shift;
+          a *= 0.5;
+        }
+        return v;
+      }
+
+      void main() {
+        vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+        vec2 p = (gl_FragCoord.xy * 2.0 - u_resolution.xy) / min(u_resolution.x, u_resolution.y);
+
+        vec2 m = (u_mouse * 2.0 - u_resolution.xy) / min(u_resolution.x, u_resolution.y);
+        float mouse_dist = length(p - m);
+        
+        p += (p - m) * (0.07 / (mouse_dist * mouse_dist + 0.15));
+
+        vec2 q = vec2(0.0);
+        q.x = fbm(p + vec2(0.0));
+        q.y = fbm(p + vec2(1.0));
+
+        vec2 r = vec2(0.0);
+        r.x = fbm(p + 4.0 * q + vec2(1.7, 9.2) + 0.15 * u_time);
+        r.y = fbm(p + 4.0 * q + vec2(8.3, 2.8) + 0.126 * u_time);
+
+        float f = fbm(p + u_noise_scale * r);
+
+        vec3 col = mix(vec3(0.01, 0.06, 0.04), vec3(0.55, 0.88, 0.18), clamp(f * f * 4.0, 0.0, 1.0));
+        col = mix(col, vec3(0.0, 0.65, 0.4), clamp(length(q), 0.0, 1.0));
+        col = mix(col, vec3(0.02, 0.04, 0.02), clamp(length(r.y), 0.0, 1.0));
+
+        vec3 finalColor = col * (0.4 + 0.6 * f * f * f);
+        gl_FragColor = vec4(finalColor, 0.35);
+      }
+    `;
+
+    function createShader(gl, type, source) {
+      const shader = gl.createShader(type);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        gl.deleteShader(shader);
+        return null;
+      }
+      return shader;
+    }
+
+    const vs = createShader(gl, gl.VERTEX_SHADER, vsSource);
+    const fs = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
+
+    const program = gl.createProgram();
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+
+    const positionAttributeLocation = gl.getAttribLocation(program, "position");
+    const positionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    const positions = [
+      -1.0, -1.0,
+       1.0, -1.0,
+      -1.0,  1.0,
+      -1.0,  1.0,
+       1.0, -1.0,
+       1.0,  1.0,
+    ];
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+
+    const resolutionLoc = gl.getUniformLocation(program, "u_resolution");
+    const timeLoc = gl.getUniformLocation(program, "u_time");
+    const mouseLoc = gl.getUniformLocation(program, "u_mouse");
+    const scaleLoc = gl.getUniformLocation(program, "u_noise_scale");
+
+    let activeScale = 3.5;
+    let speedModifier = 0.8;
+    let mouse = { x: 0, y: 0, currentX: 0, currentY: 0 };
+
+    const shaderParent = document.getElementById('shader-parent');
+    shaderParent.addEventListener('mousemove', (e) => {
+      const rect = shaderParent.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = rect.height - (e.clientY - rect.top);
+    });
+
+    shaderParent.addEventListener('touchmove', (e) => {
+      if(e.touches.length > 0) {
+        const rect = shaderParent.getBoundingClientRect();
+        mouse.x = e.touches[0].clientX - rect.left;
+        mouse.y = rect.height - (e.touches[0].clientY - rect.top);
+      }
+    }, { passive: true });
+
+    let startTime = performance.now();
+
+    function renderGL() {
+      if (!gl) return;
+      const width = shaderParent.clientWidth;
+      const height = shaderParent.clientHeight;
+      if (canvas.width !== width || canvas.height !== height) {
+        canvas.width = width;
+        canvas.height = height;
+        gl.viewport(0, 0, width, height);
+      }
+
+      gl.useProgram(program);
+
+      mouse.currentX += (mouse.x - mouse.currentX) * 0.08;
+      mouse.currentY += (mouse.y - mouse.currentY) * 0.08;
+
+      const elapsedSeconds = (performance.now() - startTime) * 0.001 * speedModifier;
+
+      gl.uniform2f(resolutionLoc, canvas.width, canvas.height);
+      gl.uniform1f(timeLoc, elapsedSeconds);
+      gl.uniform2f(mouseLoc, mouse.currentX, mouse.currentY);
+      gl.uniform1f(scaleLoc, activeScale);
+
+      gl.enableVertexAttribArray(positionAttributeLocation);
+      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+      requestAnimationFrame(renderGL);
+    }
+
+    window.addEventListener('load', () => {
+      renderGL();
+    });
+  </script>
+
+  <script>
+    const headingText = "Simplicity wins every time.";
+    let charIdx = 0;
+    const typingHeading = document.getElementById('typing-heading');
+
+    function typeWriterEffect() {
+      if (charIdx < headingText.length) {
+        typingHeading.innerHTML += headingText.charAt(charIdx);
+        charIdx++;
+        setTimeout(typeWriterEffect, 65);
+      } else {
+        document.getElementById('typing-cursor').classList.add('opacity-40');
+      }
+    }
+    window.addEventListener('DOMContentLoaded', typeWriterEffect);
+
+    const projects = [
+      {
+        title: "Primos LLC Website",
+        tag: "WEB DEVELOPMENT",
+        summary: "Modernized corporate ecosystem showcasing premier service logistics and content structures.",
+        desc: "The Primos LLC digital modernization integrated rich conversion optimization layout pathways, lightning-fast rendering states on dynamic viewports, and custom branding tailored to local corporate logistics clients.",
+        bg: "linear-gradient(135deg, #1e1b4b 0%, #111827 100%)"
+      },
+      {
+        title: "Free Landing Page Templates",
+        tag: "RESOURCES",
+        summary: "Curated collection of ultra-responsive, fully styled, and performant wireframe pages.",
+        desc: "An open-access resource deck comprising fast frontend assets built using modern CSS, accessible markup practices, and tailored conversion funnels. Download directly to deploy within your platforms.",
+        bg: "linear-gradient(135deg, #022c22 0%, #090d16 100%)"
+      }
+    ];
+    let projectIdx = 0;
+
+    function renderProject() {
+      const prj = projects[projectIdx];
+      const tag = document.getElementById('project-tag');
+      const title = document.getElementById('project-title');
+      const summary = document.getElementById('project-summary');
+      const bg = document.getElementById('project-bg');
+
+      const card = document.getElementById('project-card');
+      card.classList.add('opacity-40', 'translate-x-2');
+      
+      setTimeout(() => {
+        tag.innerText = prj.tag;
+        title.innerText = prj.title;
+        summary.innerText = prj.summary;
+        bg.style.background = prj.bg;
+        card.classList.remove('opacity-40', 'translate-x-2');
+      }, 150);
+    }
+
+    function prevProject() {
+      projectIdx = (projectIdx - 1 + projects.length) % projects.length;
+      renderProject();
+    }
+
+    function nextProject() {
+      projectIdx = (projectIdx + 1) % projects.length;
+      renderProject();
+    }
+
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const projectCard = document.getElementById('project-card');
+
+    projectCard.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    projectCard.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, { passive: true });
+
+    function handleSwipe() {
+      const swipeDistance = touchEndX - touchStartX;
+      if (Math.abs(swipeDistance) > 50) {
+        if (swipeDistance > 0) {
+          prevProject();
+        } else {
+          nextProject();
+        }
+      }
+    }
+
+    function openProjectModal() {
+      const modal = document.getElementById('project-modal');
+      const prj = projects[projectIdx];
+      
+      document.getElementById('modal-project-title').innerText = prj.title;
+      document.getElementById('modal-project-tag').innerText = prj.tag;
+      document.getElementById('modal-project-desc').innerText = prj.desc;
+      
+      modal.classList.remove('pointer-events-none', 'opacity-0');
+      modal.querySelector('.bg-[#12141c]').classList.add('scale-100');
+    }
+
+    function closeProjectModal() {
+      const modal = document.getElementById('project-modal');
+      modal.classList.add('pointer-events-none', 'opacity-0');
+      modal.querySelector('.bg-[#12141c]').classList.remove('scale-100');
+    }
+  </script>
 </body>
 </html>
